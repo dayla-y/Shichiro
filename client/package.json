@@ -1,7 +1,6 @@
 {
-	"name": "@devshareacademy/phaser-3-zelda_legend",
+	"name": "Shichiro",
 	"version": "1.0.0",
-	"description": "A Phaser 3 implementation of zelda_legend.",
 	"scripts": {
 		"start": "vite --config config/vite.config.js",
 		"build": "tsc && vite build --config config/vite.config.js",
@@ -12,9 +11,8 @@
 	"license": "MIT",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/devshareacademy/phaser-zelda-like-tutorial.git"
+		"url": "https://github.com/dayla-y/Shichiro"
 	},
-	"homepage": "https://github.com/devshareacademy/phaser-zelda-like-tutorial",
 	"devDependencies": {
 		"@devshareacademy/eslint-config": "0.0.19",
 		"@devshareacademy/prettier-config": "0.0.6",

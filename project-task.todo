@@ -1,16 +1,4 @@
-Intro:
-  ☐ demo game that will be built
-  ☐ project requirements
-  ☐ review project task list
-  ☐ credit for assets used in project
-
-Project Setup:
-  ☐ download basic project files
-  ☐ download tiled for level editing
-  ☐ install project dependencies
-  ☐ running project on local web server
-  ☐ adding assets to project
-
+Front-end
 Player:
   ☐ create player game object
   ☐ handle player input
@@ -18,19 +6,6 @@ Player:
   ☐ character state machine
   ☐ components for animation, speed, and direction
 
-Enemies:
-  ☐ create character base class
-    ☐ update spider and player class to use
-  ☐ create spider
-    ☐ state machine
-    ☐ components for animation, speed, and direction
-    ☐ basic random enemy movement
-  ☐ create wisp
-    ☐ state machine
-    ☐ add common components
-    ☐ invulnerable component
-  ☐ collisions between player and enemies
-  ☐ life component and taking damage
 
 Interactable Items:
   ☐ create breakable pot
@@ -39,58 +14,33 @@ Interactable Items:
   ☐ add player states for interacting with items
   ☐ open chests
   ☐ pickup and throw pots
-    ☐ drop pots when hurt
+  ☐ reception
 
 Level Design & Creation:
-  ☐ review dungeon and over world level designs
-  ☐ review data we will need for each level
-  ☐ review how levels are connected together
   ☐ tiled
-    ☐ create dungeon
       ☐ add background image for a guide
-      ☐ build dungeon rooms and outline
       ☐ add collision layers
       ☐ import custom types
-      ☐ add game objects for doors, chests, enemies, traps, etc
+      ☐ add game objects for doors, chests, etc
       ☐ create foreground layer
       ☐ add room layers
       ☐ export json data and images
-    ☐ create over world level (same steps as creating dungeon)
+    ☐ create over world level
 
-Levels:
-  ☐ create background and foreground images
-  ☐ loading tiled map data
-  ☐ add collision layers
-  ☐ camera follow player
-  ☐ bind camera to room
-  ☐ room transitions
-  ☐ level transitions
 
 Level Objects:
   ☐ create pots
   ☐ create chests
-  ☐ create enemies
   ☐ create doors
   ☐ create buttons
 
-Dungeon Mechanics:
-  ☐ traps
-    ☐ button press
-    ☐ enemies defeated
+Mechanics:
   ☐ inventory manager
   ☐ chest items
   ☐ locked doors
     ☐ small key door
-    ☐ boss key door
   ☐ respawn select objects
   ☐ show/hide objects dynamically
-
-Attacking:
-  ☐ attack state
-  ☐ weapon component
-  ☐ base weapon class
-  ☐ sword weapon
-  ☐ weapon collisions
 
 Data Manager:
   ☐ player details
@@ -103,38 +53,42 @@ UI:
   ☐ game over
   ☐ dialog ui
 
-Boss:
-  ☐ create boss character
-  ☐ add boss states
-  ☐ dagger weapon
-  ☐ boss defeated
 
+Database:
 
+Medication Reception:
+  ☐ Order Number
+  ☐ Supplier
+  ☐ Branch
+  ☐ Product Validation
+Medication Classification
+  ☐ Antibiotic
+  ☐ Medication in Refrigeration
+  ☐ Vitamins/Supplements
+  ☐ Controlled Medication
+  ☐ Over-the-Counter Medication
+  ☐ Non-Medication Items - Supplies
+Medication Sale
+  ☐ Patient Name
+  ☐ Prescribing Doctor's Name
+  ☐ Prescribing Doctor's Phone Number
+  ☐ Prescribing Doctor's License
+  ☐ Controlled Medication Details
+  ☐ Sale Date
+Sale Management
+  ☐ Sale Start and End Date
+  ☐ Items to be Placed on Sale
+  ☐ Discount Percentage
+  ☐ In the case of vitamins, employees will be given a commission, with the commission percentage indicated.
+Orders
+  ☐ Medications that may be missing or in high demand
+  ☐ Should be customer orders
+  ☐ Do not count if not in stock
+  ☐ Warehouse
+  ☐ Keep everything up to date
+  ☐ Know expiration dates at all times
+  ☐ Medications that expire in 6 months must be reported to determine whether they will remain in stock or will be put on sale because some suppliers accept returns (which will be replaced with a penalty percentage).
 
-
--------------------------------
-Premium Content:
-  ☐ asset pack splitting and dynamic asset loading
-  ☐ saving and loading game state
-  ☐ tile scene
-  ☐ saved data scene
-  ☐ additional weapons & items
-    ☐ bombs
-    ☐ bow
-  ☐ 2nd dungeon
-    ☐ flying tile enemies
-    ☐ additional boss
-  ☐ inventory screen
-  ☐ map screen
-  ☐ hud enhancements - items, equipped item, etc.
-  ☐ new mechanics
-    ☐ bombable entrances
-    ☐ falling floor
-  ☐ level 2 tier items
-    ☐ deal more damage
-    ☐ receive less damage
-
--------------------------------
 
 -------------------------------
 ☐ ✔ ✘
