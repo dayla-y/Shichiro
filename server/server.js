@@ -2,6 +2,8 @@ import cookieParser from 'cookie-parser';
 import express from 'express';
 import { testConnection } from './configs/db.js';
 import medicamentoRoutes from './routes/medicamento-routes.js';
+import sellsRoutes from './routes/ventas-router.js';
+import empleadoRoutes from './routes/empleados-router.js';
 
 // import cors from 'cors';
 
@@ -23,6 +25,10 @@ app.use(cookieParser());
 // Routes
 app.get('/', (req, res) => res.send("API is working"));
 app.use('/api/medicamentos', medicamentoRoutes);
+app.use('/api/sells', sellsRoutes);
+app.use('/api/empleados', empleadoRoutes);
+
+
 
 app.listen(port, ()=>{
   console.log(`Server is running on http://localhost:${port}`);
