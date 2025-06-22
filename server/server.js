@@ -4,6 +4,10 @@ import { testConnection } from './configs/db.js';
 import medicamentoRoutes from './routes/medicamento-routes.js';
 import sellsRoutes from './routes/ventas-router.js';
 import empleadoRoutes from './routes/empleados-router.js';
+import alertsRoutes from './routes/alertas-router.js';
+import warehousesRoutes from './routes/almacenes-router.js';
+import clientsRoutes from './routes/clientes-router.js';
+import commsRoutes from './routes/comisiones-routes.js';
 
 // import cors from 'cors';
 
@@ -24,6 +28,10 @@ app.use(cookieParser());
 
 // Routes
 app.get('/', (req, res) => res.send("API is working"));
+app.use('/api/alertas', alertsRoutes);
+app.use('/api/almacenes', warehousesRoutes);
+app.use('/api/clientes', clientsRoutes);
+app.use('/api/comisiones', commsRoutes);
 app.use('/api/medicamentos', medicamentoRoutes);
 app.use('/api/sells', sellsRoutes);
 app.use('/api/empleados', empleadoRoutes);
