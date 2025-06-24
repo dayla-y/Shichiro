@@ -8,6 +8,9 @@ import alertsRoutes from './routes/alertas-router.js';
 import warehousesRoutes from './routes/almacenes-router.js';
 import clientsRoutes from './routes/clientes-router.js';
 import commsRoutes from './routes/comisiones-routes.js';
+import devolutionsRoutes from './routes/devolutions-router.js';
+import inventarioRoutes from './routes/inventario-router.js';
+import itemsInventarioRoutes from './routes/items-inventario-router.js';
 
 // import cors from 'cors';
 
@@ -32,6 +35,9 @@ app.use('/api/alertas', alertsRoutes);
 app.use('/api/almacenes', warehousesRoutes);
 app.use('/api/clientes', clientsRoutes);
 app.use('/api/comisiones', commsRoutes);
+app.use('/api/devoluciones', devolutionsRoutes);
+app.use('/api/items-inventario', itemsInventarioRoutes);
+app.use('/api/devoluciones', devolutionsRoutes);
 app.use('/api/medicamentos', medicamentoRoutes);
 app.use('/api/sells', sellsRoutes);
 app.use('/api/empleados', empleadoRoutes);
