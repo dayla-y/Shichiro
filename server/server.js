@@ -11,6 +11,10 @@ import commsRoutes from './routes/comisiones-routes.js';
 import devolutionsRoutes from './routes/devolutions-router.js';
 import inventarioRoutes from './routes/inventario-router.js';
 import itemsInventarioRoutes from './routes/items-inventario-router.js';
+import orderClientRoutes from './routes/pedidos-router.js';
+import orderRoutes from './routes/pedidos-router.js';
+import promotionsRouter from './routes/promociones-router.js';
+import receptionsRouter from './routes/recepciones-router.js';
 
 // import cors from 'cors';
 
@@ -39,6 +43,10 @@ app.use('/api/devoluciones', devolutionsRoutes);
 app.use('/api/items-inventario', itemsInventarioRoutes);
 app.use('/api/devoluciones', devolutionsRoutes);
 app.use('/api/medicamentos', medicamentoRoutes);
+app.use('/api/promociones', promotionsRouter);
+app.use('/api/recepciones', receptionsRouter);
+app.use('/api/order', orderRoutes);
+app.use('/api/order-client', orderClientRoutes);
 app.use('/api/sells', sellsRoutes);
 app.use('/api/empleados', empleadoRoutes);
 
