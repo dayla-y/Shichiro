@@ -15,6 +15,9 @@ import orderClientRoutes from './routes/pedidos-router.js';
 import orderRoutes from './routes/pedidos-router.js';
 import promotionsRouter from './routes/promociones-router.js';
 import receptionsRouter from './routes/recepciones-router.js';
+import proveedorRoutes from './routes/proveedor-routes.js';
+import registroCaducidadesRoutes from './routes/registro-caducidades-routes.js';
+import sucursalRoutes from './routes/sucursal-routes.js';
 
 // import cors from 'cors';
 
@@ -44,7 +47,10 @@ app.use('/api/items-inventario', itemsInventarioRoutes);
 app.use('/api/devoluciones', devolutionsRoutes);
 app.use('/api/medicamentos', medicamentoRoutes);
 app.use('/api/promociones', promotionsRouter);
+app.use('/api/proveedor', proveedorRoutes);
 app.use('/api/recepciones', receptionsRouter);
+app.use('/api/registro-caducidades', registroCaducidadesRoutes);
+app.use('/api/sucursales', sucursalRoutes);
 app.use('/api/order', orderRoutes);
 app.use('/api/order-client', orderClientRoutes);
 app.use('/api/sells', sellsRoutes);
