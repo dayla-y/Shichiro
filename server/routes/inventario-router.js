@@ -1,18 +1,23 @@
 import express from 'express';
 import {
     createInventario,
-    deleteInventario,
-    getAllInventarios,
-    getInventarioById,
-    updateInventario
+    getInventarioByJugador,
+    updateCapacidadInventario,
+    addItemToInventario,
+    removeItemFromInventario,
+    updateItemInInventario
 } from '../controllers/inventario-controller.js';
 
-const inventarioRoutes = express.Router();
+const router = express.Router();
 
-inventarioRoutes.get('/', getAllInventarios);
-inventarioRoutes.get('/:id', getInventarioById);
-inventarioRoutes.post('/', createInventario);
-inventarioRoutes.put('/:id', updateInventario);
-inventarioRoutes.delete('/:id', deleteInventario);
+// Rutas para el inventario del jugador
+router.post('/', createInventario);
+router.get('/jugador/:jugador_id', getInventarioByJugador);
+router.put('/:id/capacidad', updateCapacidadInventario);
 
-export default inventarioRoutes;
+// Rutas para los items del inventario
+router.post('/:inventario_id/items', addItemToInventario);
+router.delete('/:inventario_id/items/:item_id', removeItemFromInventario);
+router.put('/items/:item_id', updateItemInInventario);
+
+export default router;

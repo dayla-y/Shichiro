@@ -18,6 +18,15 @@ import receptionsRouter from './routes/recepciones-router.js';
 import proveedorRoutes from './routes/proveedor-routes.js';
 import registroCaducidadesRoutes from './routes/registro-caducidades-routes.js';
 import sucursalRoutes from './routes/sucursal-routes.js';
+import promocionRoutes from './routes/promocion-routes.js';
+import realizarVentaRoutes from './routes/realizar-venta-router.js';
+import recepcionRoutes from './routes/recepcion-routes.js';
+import transferenciasRoutes from './routes/transferencias-routes.js';
+import comisionRoutes from './routes/comisionRoutes.js';
+import reporteCaducidadesRouter from './routes/reporteCaducidadesRoutes.js';
+import jugadorRoutes from './routes/jugador-routes.js';
+import estadoJugadorRoutes from './routes/estado-jugador-routes.js';
+import objetoNivelRoutes from './routes/objeto-nivel-routes.js';
 
 // import cors from 'cors';
 
@@ -56,6 +65,23 @@ app.use('/api/order-client', orderClientRoutes);
 app.use('/api/sells', sellsRoutes);
 app.use('/api/empleados', empleadoRoutes);
 
+app.use('/api/promocion', promocionRoutes);
+app.use('/api/realizar-venta', realizarVentaRoutes);
+app.use('/api/realizar-venta', recepcionRoutes);
+app.use('/api/transferencias', transferenciasRoutes);
+
+
+app.use('/api/reporte-caducidades', reporteCaducidadesRouter);
+
+app.use('/api/comisiones', comisionRoutes);
+
+
+// Jugador
+app.use('/api/jugador', jugadorRoutes);
+app.use('/api/estado-jugador', estadoJugadorRoutes);
+
+
+app.use('/api/objeto-niveles', objetoNivelRoutes);
 
 
 app.listen(port, ()=>{

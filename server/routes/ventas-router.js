@@ -10,6 +10,7 @@ import {
     updateDetalleVenta,
     deleteDetalleVenta
 } from '../controllers/ventas-controller.js';
+import { verificarReceta } from '../controllers/verificar-requiere-receta-controller.js';
 
 const sellsRoutes = express.Router();
 
@@ -19,6 +20,7 @@ sellsRoutes.get('/:id', getVentaById);
 sellsRoutes.post('/', createVenta);
 sellsRoutes.put('/:id', updateVenta);
 sellsRoutes.delete('/:id', deleteVenta);
+sellsRoutes.get('/:ventaId/verificar-receta', verificarReceta);
 
 // Rutas para detalles de venta
 sellsRoutes.get('/:venta_id/detalles', getDetallesByVentaId);

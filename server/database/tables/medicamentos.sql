@@ -14,3 +14,5 @@ CREATE TABLE medicamentos (
     refrigerado BOOLEAN NOT NULL,
     proveedor_id INTEGER REFERENCES proveedores(id)
 );
+
+SELECT id, nombre FROM medicamentos;
