@@ -2,7 +2,7 @@ CREATE TABLE npcs (
     id SERIAL PRIMARY KEY,
     nombre VARCHAR(50) NOT NULL,
     tipo VARCHAR(20) NOT NULL CHECK (tipo IN (
-        'comerciante', 'enemigo', 'aliado', 'neutral', 'mascota'
+        'comerciante', 'paciente', 'enemigo', 'aliado', 'neutral', 'mascota'
     )),
     salud_actual INTEGER,
     salud_maxima INTEGER,
@@ -15,7 +15,6 @@ CREATE TABLE npcs (
         'atacando', 'herido', 'muerto', 'conversando'
     )),
     escena_actual VARCHAR(50) NOT NULL,
-    dialogo_id INTEGER REFERENCES dialogos(id),
     items_venta JSONB,
     comportamiento TEXT -- Podría ser un JSON con el comportamiento del NPC
 );

@@ -27,6 +27,12 @@ import reporteCaducidadesRouter from './routes/reporteCaducidadesRoutes.js';
 import jugadorRoutes from './routes/jugador-routes.js';
 import estadoJugadorRoutes from './routes/estado-jugador-routes.js';
 import objetoNivelRoutes from './routes/objeto-nivel-routes.js';
+import animacionRoutes from './routes/animacion-routes.js';
+import npcRoutes from './routes/npc-routes.js';
+import dialogoRoutes from './routes/dialogo-routes.js';
+import escenaRoutes from './routes/escena-routes.js';
+import partidaGuardadaRoutes from './routes/partidaGuardada-routes.js';
+import interaccionRoutes from './routes/interaccion-routes.js';
 
 // import cors from 'cors';
 
@@ -79,9 +85,18 @@ app.use('/api/comisiones', comisionRoutes);
 // Jugador
 app.use('/api/jugador', jugadorRoutes);
 app.use('/api/estado-jugador', estadoJugadorRoutes);
+app.use('/api/animaciones', animacionRoutes);
+app.use('/api/interacciones', interaccionRoutes);
+
+
+app.use('/api/npcs', npcRoutes);
+app.use('/api/dialogo', dialogoRoutes);
 
 
 app.use('/api/objeto-niveles', objetoNivelRoutes);
+app.use('/api/escena', escenaRoutes);
+
+app.use('/api/partida-guardada', partidaGuardadaRoutes);
 
 
 app.listen(port, ()=>{
