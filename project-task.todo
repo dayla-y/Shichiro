@@ -1,6 +1,6 @@
 Front-end
 Player:
-  ☐ create player game object
+  ✔ create player game object
   ☐ handle player input
   ☐ player movement
   ☐ character state machine
@@ -57,24 +57,24 @@ UI:
 Database:
 
 Medication Reception:
-  ☐ Order Number
+  ✔ Order Number
   ☐ Supplier
   ☐ Branch
   ☐ Product Validation
 Medication Classification
-  ☐ Antibiotic
-  ☐ Medication in Refrigeration
-  ☐ Vitamins/Supplements
-  ☐ Controlled Medication
+  ✔ Antibiotic
+  ✔ Medication in Refrigeration
+  ✔ Vitamins/Supplements
+  ✔ Controlled Medication
   ☐ Over-the-Counter Medication
   ☐ Non-Medication Items - Supplies
 Medication Sale
-  ☐ Patient Name
-  ☐ Prescribing Doctor's Name
-  ☐ Prescribing Doctor's Phone Number
-  ☐ Prescribing Doctor's License
-  ☐ Controlled Medication Details
-  ☐ Sale Date
+  ✔ Patient Name
+  ✔ Prescribing Doctor's Name
+  ✔ Prescribing Doctor's Phone Number
+  ✔ Prescribing Doctor's License
+  ✔ Controlled Medication Details
+  ✔ Sale Date
 Sale Management
   ☐ Sale Start and End Date
   ☐ Items to be Placed on Sale
