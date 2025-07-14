@@ -1,7 +1,7 @@
 import * as Phaser from 'phaser';
 import { Position } from '../../common/types';
 import { InputComponent } from '../../components/input/input-component';
-import { PLAYER_SPEED } from '../../common/config';
+import { PLAYER_INVULNERABLE_AFTER_HIT_DURATION, PLAYER_SPEED } from '../../common/config';
 import { AnimationConfig } from '../../components/game-object/animation-component';
 import { ASSET_KEYS, PLAYER_ANIMATION_KEYS } from '../../common/assets';
 import { CharacterGameObject } from '../common/character-game-object';
@@ -39,6 +39,8 @@ export class Player extends CharacterGameObject {
       animationConfig,
       speed: PLAYER_SPEED,
       inputComponent: config.controls,
+      isInvulnerable: false,
+      invulnerableAfterHitAnimationDuration: PLAYER_INVULNERABLE_AFTER_HIT_DURATION,
     });
 
     // add state machine
