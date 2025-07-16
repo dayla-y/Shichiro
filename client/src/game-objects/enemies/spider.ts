@@ -7,9 +7,11 @@ import { CharacterGameObject } from '../common/character-game-object';
 import { IdleState } from '../../components/state-machine/states/idle-state';
 import { MoveState } from '../../components/state-machine/states/move-state';
 import { CHARACTER_STATES } from '../../components/state-machine/states/character-states';
-import { ENEMY_SPIDER_CHANGE_DIRECTION_DELAY_MAX, ENEMY_SPIDER_CHANGE_DIRECTION_DELAY_MIN, ENEMY_SPIDER_CHANGE_DIRECTION_DELAY_WAIT, ENEMY_SPIDER_SPEED } from '../../common/config';
+import { ENEMY_SPIDER_CHANGE_DIRECTION_DELAY_MAX, ENEMY_SPIDER_CHANGE_DIRECTION_DELAY_MIN, ENEMY_SPIDER_CHANGE_DIRECTION_DELAY_WAIT, ENEMY_SPIDER_HURT_PUSH_BACK_SPEED, ENEMY_SPIDER_SPEED, ENEMY_SPIDER_START_MAX_HEALTH } from '../../common/config';
 import { DIRECTION } from '../../common/common';
 import { exhaustiveGuard } from '../../common/utils';
+import { HurtState } from '../../components/state-machine/states/hurt-state';
+import { DeathState } from '../../components/state-machine/states/death-states';
 
 export type SpiderConfig = {
   scene: Phaser.Scene;
@@ -20,6 +22,8 @@ export class Spider extends CharacterGameObject {
   constructor(config: SpiderConfig) {
     // create animation config for component
     const animConfig = { key: SPIDER_ANIMATION_KEYS.WALK, repeat: -1, ignoreIfPlaying: true };
+    const hurtAnimConfig = { key: SPIDER_ANIMATION_KEYS.HIT, repeat: 0, ignoreIfPlaying: true };
+    const deathAnimConfig = { key: SPIDER_ANIMATION_KEYS.DEATH, repeat: 0, ignoreIfPlaying: true };
     const animationConfig: AnimationConfig = {
       WALK_DOWN: animConfig,
       WALK_UP: animConfig,
@@ -29,6 +33,14 @@ export class Spider extends CharacterGameObject {
       IDLE_UP: animConfig,
       IDLE_LEFT: animConfig,
       IDLE_RIGHT: animConfig,
+      HURT_DOWN: hurtAnimConfig,
+      HURT_UP: hurtAnimConfig,
+      HURT_LEFT: hurtAnimConfig,
+      HURT_RIGHT: hurtAnimConfig,
+      DIE_DOWN: deathAnimConfig,
+      DIE_UP: deathAnimConfig,
+      DIE_LEFT: deathAnimConfig,
+      DIE_RIGHT: deathAnimConfig,
     };
 
     super({
@@ -41,18 +53,23 @@ export class Spider extends CharacterGameObject {
       animationConfig,
       speed: ENEMY_SPIDER_SPEED,
       inputComponent: new InputComponent(),
-
+      isInvulnerable: false,
+      maxLife: ENEMY_SPIDER_START_MAX_HEALTH,
     });
 
-    this._directionComponent.callback = (direction: Direction)=>{
+    // add shared components
+    this._directionComponent.callback = (direction: Direction) => {
       this.#handleDirectionChange(direction);
-    }
+    };
 
     // add state machine
     this._stateMachine.addState(new IdleState(this));
     this._stateMachine.addState(new MoveState(this));
+    this._stateMachine.addState(new HurtState(this, ENEMY_SPIDER_HURT_PUSH_BACK_SPEED));
+    this._stateMachine.addState(new DeathState(this));
     this._stateMachine.setState(CHARACTER_STATES.IDLE_STATE);
 
+    // start simple ai movement pattern
     this.scene.time.addEvent({
       delay: Phaser.Math.Between(ENEMY_SPIDER_CHANGE_DIRECTION_DELAY_MIN, ENEMY_SPIDER_CHANGE_DIRECTION_DELAY_MAX),
       callback: this.#changeDirection,
@@ -61,46 +78,49 @@ export class Spider extends CharacterGameObject {
     });
   }
 
-  #handleDirectionChange(direction: Direction): void{
-    switch(direction){
+  #handleDirectionChange(direction: Direction): void {
+    switch (direction) {
       case DIRECTION.DOWN:
-      this.setAngle(0);
-        break;
+        this.setAngle(0);
+        return;
       case DIRECTION.UP:
-      this.setAngle(180);
-        break;
+        this.setAngle(180);
+        return;
       case DIRECTION.LEFT:
-      this.setAngle(90);
-        break;
+        this.setAngle(90);
+        return;
       case DIRECTION.RIGHT:
-      this.setAngle(270);
-        break;
+        this.setAngle(270);
+        return;
       default:
         exhaustiveGuard(direction);
     }
   }
 
-  #changeDirection(): void{
+  #changeDirection(): void {
+    // reset existing enemy input
     this.controls.reset();
 
-    this.scene.time.delayedCall(ENEMY_SPIDER_CHANGE_DIRECTION_DELAY_WAIT, ()=>{
+    // wait a small period of time and then choose a random direction to move
+    this.scene.time.delayedCall(ENEMY_SPIDER_CHANGE_DIRECTION_DELAY_WAIT, () => {
       const randomDirection = Phaser.Math.Between(0, 3);
-      if(randomDirection === 0){
+      if (randomDirection === 0) {
         this.controls.isUpDown = true;
-      } else if(randomDirection === 1){
+      } else if (randomDirection === 1) {
         this.controls.isRightDown = true;
-      } else if(randomDirection === 2){
+      } else if (randomDirection === 2) {
         this.controls.isDownDown = true;
-      } else{
-        this.controls.isUpDown = true;
+      } else {
+        this.controls.isLeftDown = true;
       }
 
-        this.scene.time.addEvent({
-          delay: Phaser.Math.Between(500, 1500),
-          callback: this.#changeDirection,
-          callbackScope: this,
-          loop: false,
-        });
+      // set up event for next direction change
+      this.scene.time.addEvent({
+        delay: Phaser.Math.Between(ENEMY_SPIDER_CHANGE_DIRECTION_DELAY_MIN, ENEMY_SPIDER_CHANGE_DIRECTION_DELAY_MAX),
+        callback: this.#changeDirection,
+        callbackScope: this,
+        loop: false,
+      });
     });
   }
 }

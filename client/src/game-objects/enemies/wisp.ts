@@ -7,7 +7,7 @@ import { CharacterGameObject } from '../common/character-game-object';
 import { IdleState } from '../../components/state-machine/states/idle-state';
 import { MoveState } from '../../components/state-machine/states/move-state';
 import { CHARACTER_STATES } from '../../components/state-machine/states/character-states';
-import { ENEMY_WISP_PULSE_DURATION, ENEMY_WISP_PULSE_SCALE_X, ENEMY_WISP_PULSE_SCALE_Y, ENEMY_WISP_SPEED } from '../../common/config';
+import { ENEMY_WISP_PULSE_DURATION, ENEMY_WISP_PULSE_SCALE_X, ENEMY_WISP_PULSE_SCALE_Y, ENEMY_WISP_SPEED, ENEMY_WISP_START_MAX_HEALTH } from '../../common/config';
 import { DIRECTION } from '../../common/common';
 import { exhaustiveGuard } from '../../common/utils';
 import { BounceMoveState } from '../../components/state-machine/states/bounce-character-state';
@@ -39,6 +39,7 @@ export class Wisp extends CharacterGameObject {
       speed: ENEMY_WISP_SPEED,
       inputComponent: new InputComponent(),
       isInvulnerable: true,
+      maxLife: ENEMY_WISP_START_MAX_HEALTH,
     });
 
     // add state machine

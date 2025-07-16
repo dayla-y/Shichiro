@@ -1,26 +1,25 @@
-import { GameObject } from "../../common/types";
-import { BaseGameObjetctComponet } from "./base-game-objects-component";
+import { GameObject } from '../../common/types';
+import { BaseGameObjetctComponet } from './base-game-objects-component';
 
 export class InvulnerableComponent extends BaseGameObjetctComponet {
-    #invulnerable: boolean;
-    #invulnerableAfterHitAnimationDuration: number;
+  #invulnerable: boolean;
+  #invulnerableAfterHitAnimationDuration: number;
 
-    constructor(gameObject: GameObject, invulnerable: boolean, invulnerableAfterHitAnimationDuration = 0) {
-        super(gameObject);
-        this.#invulnerable = invulnerable;
-        this.#invulnerableAfterHitAnimationDuration = invulnerableAfterHitAnimationDuration;
-    }
+  constructor(gameObject: GameObject, invulnerable = false, invulnerableAfterHitAnimationDuration = 0) {
+    super(gameObject);
+    this.#invulnerable = invulnerable;
+    this.#invulnerableAfterHitAnimationDuration = invulnerableAfterHitAnimationDuration;
+  }
 
-    get invulnerable(): boolean{
-        return this.#invulnerable;
-    }
+  get invulnerable(): boolean {
+    return this.#invulnerable;
+  }
 
-    set invulnerable(value: boolean){
-        this.#invulnerable = value;
-    }
+  set invulnerable(val: boolean) {
+    this.#invulnerable = val;
+  }
 
-    get invulnerableAfterHitAnimationDuration(): number{
-        return this.#invulnerableAfterHitAnimationDuration;
-    }
-
+  get invulnerableAfterHitAnimationDuration(): number {
+    return this.#invulnerableAfterHitAnimationDuration;
+  }
 }
