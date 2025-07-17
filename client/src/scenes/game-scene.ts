@@ -5,14 +5,17 @@ import { Player } from '../game-objects/player/player';
 import { Spider } from '../game-objects/enemies/spider';
 import { Wisp } from '../game-objects/enemies/wisp';
 import { CharacterGameObject } from '../game-objects/common/character-game-object';
-import { DIRECTION } from '../common/common';
+import { CHEST_STATE, DIRECTION } from '../common/common';
 import { KeyboardComponent } from '../components/input/keybord-componet';
 import { PLAYER_START_MAX_HEALTH } from '../common/config';
+import { Pot } from '../game-objects/objects/pot';
+import { Chest } from '../game-objects/objects/chest';
 
 export class GameScene extends Phaser.Scene {
   #controls!: KeyboardComponent;
   #player!: Player;
   #enemyGroup!: Phaser.GameObjects.Group;
+  #blockingGroup!: Phaser.GameObjects.Group;
 
   constructor() {
     super({
@@ -52,6 +55,30 @@ export class GameScene extends Phaser.Scene {
       { runChildUpdate: true },
     );
 
+    this.#blockingGroup = this.add.group([
+
+        new Pot({
+          scene: this,
+          position: { x: this.scale.width / 2 + 90, y: this.scale.height / 2 },
+        }),
+
+        new Chest({
+          scene: this,
+          position: { x: this.scale.width / 2 - 90, y: this.scale.height / 2 },
+          requiresKey: false,
+          chestState: CHEST_STATE.REVELEADED,
+        }),
+
+        new Chest({
+          scene: this,
+          position: { x: this.scale.width / 2 - 90, y: this.scale.height / 2 - 80 },
+          requiresKey: true,
+          chestState: CHEST_STATE.REVELEADED,
+        }),
+    ]);
+
+    
+
     this.#registerColliders();
   }
 
@@ -67,6 +94,14 @@ export class GameScene extends Phaser.Scene {
       this.#player.hit(DIRECTION.DOWN, 1);
       const enemyGameObject = enemy as CharacterGameObject;
       enemyGameObject.hit(this.#player.direction, 1);
+    });
+
+    this.physics.add.collider(this.#player, this.#blockingGroup, (player, gameObject)=>{
+      //
+    });
+
+    this.physics.add.collider(this.#player, this.#blockingGroup, (enemy, gameObject)=>{
+      //
     });
   }
 }

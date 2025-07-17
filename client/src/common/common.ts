@@ -4,3 +4,9 @@ export const DIRECTION = {
     LEFT: 'LEFT',
     RIGHT: 'RIGHT',
 } as const;
+
+export const CHEST_STATE = {
+    HIDDEN: 'HIDDEN',
+    REVELEADED: 'REVELEADED',
+    OPEN: 'OPEN',
+} as const;
