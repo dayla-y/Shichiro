@@ -10,3 +10,9 @@ export const CHEST_STATE = {
     REVELEADED: 'REVELEADED',
     OPEN: 'OPEN',
 } as const;
+
+export const INTERACTIVE_OBJECT_TYPE = {
+    AUTO: 'AUTO',
+    PICKUP: 'PICKUP',
+    OPEN: 'OPEN',
+} as const
