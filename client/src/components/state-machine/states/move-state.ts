@@ -1,91 +1,32 @@
-import { BaseCharacterState } from './base-character-state';
 import { CHARACTER_STATES } from './character-states';
-import { exhaustiveGuard, isArcadePhysicsBody } from '../../../common/utils';
-import { Direction } from '../../../common/types';
-import { DIRECTION, INTERACTIVE_OBJECT_TYPE } from '../../../common/common';
+import { exhaustiveGuard } from '../../../common/utils';
+import { INTERACTIVE_OBJECT_TYPE } from '../../../common/common';
 import { CharacterGameObject } from '../../../game-objects/common/character-game-object';
 import { InputComponent } from '../../input/input-component';
 import { CollidingObjectsComponent } from '../../game-object/coliding-objects-component';
 import { InteractiveObjectsComponent } from '../../game-object/interactive-object-component';
+import { BaseMoveState } from './character/base-move-state';
 
-export class MoveState extends BaseCharacterState {
+export class MoveState extends BaseMoveState {
   constructor(gameObject: CharacterGameObject) {
-    super(CHARACTER_STATES.MOVE_STATE, gameObject);
+    super(CHARACTER_STATES.MOVE_STATE, gameObject, 'WALK');
   }
 
   public onUpdate(): void {
     const controls = this._gameObject.controls;
 
-    // if no input is provided transition back to idle state
-    if (!controls.isDownDown && !controls.isUpDown && !controls.isLeftDown && !controls.isRightDown) {
-      this._stateMachine.setState(CHARACTER_STATES.IDLE_STATE);
-      return;
-    }
+    if(this.isNoInputMovement(controls)){
+            this._stateMachine.setState(CHARACTER_STATES.IDLE_STATE);
 
+    }
     if(this.#checkIfObjectWasInteractedWith(controls)){
       return;
     }
 
-    // vertical movement
-    if (controls.isUpDown) {
-      this.#updateVelocity(false, -1);
-      this.#updateDirection(DIRECTION.UP);
-    } else if (controls.isDownDown) {
-      this.#updateVelocity(false, 1);
-      this.#updateDirection(DIRECTION.DOWN);
-    } else {
-      this.#updateVelocity(false, 0);
-    }
+    this.handleCharacterMovement();
 
-    const isMovingVertically = controls.isDownDown || controls.isUpDown;
-    // horizontal movement
-    if (controls.isLeftDown) {
-      this.#flip(true);
-      this.#updateVelocity(true, -1);
-      if (!isMovingVertically) {
-        this.#updateDirection(DIRECTION.LEFT);
-      }
-    } else if (controls.isRightDown) {
-      this.#flip(false);
-      this.#updateVelocity(true, 1);
-      if (!isMovingVertically) {
-        this.#updateDirection(DIRECTION.RIGHT);
-      }
-    } else {
-      this.#updateVelocity(true, 0);
-    }
-
-    this.#normalizeVelocity();
   }
 
-  #flip(value: boolean): void {
-    this._gameObject.setFlipX(value);
-  }
-
-  #updateVelocity(isX: boolean, value: number): void {
-    if (!isArcadePhysicsBody(this._gameObject.body)) {
-      return;
-    }
-    if (isX) {
-      this._gameObject.body.velocity.x = value;
-      return;
-    }
-    this._gameObject.body.velocity.y = value;
-  }
-
-  #normalizeVelocity(): void {
-    // if the player is moving diagonally, the resultant vector will have a magnitude greater than the defined speed.
-    // if we normalize the vector, this will make sure the magnitude matches defined speed
-    if (!isArcadePhysicsBody(this._gameObject.body)) {
-      return;
-    }
-    this._gameObject.body.velocity.normalize().scale(this._gameObject.speed);
-  }
-
-  #updateDirection(direction: Direction): void {
-    this._gameObject.direction = direction;
-    this._gameObject.animationComponent.playAnimation(`WALK_${this._gameObject.direction}`);
-  }
 
   #checkIfObjectWasInteractedWith(controls: InputComponent): boolean {
     const collideComponent = CollidingObjectsComponent.getComponent<CollidingObjectsComponent>(this._gameObject);
@@ -103,6 +44,10 @@ export class MoveState extends BaseCharacterState {
     if (!controls.isActionKeyJustDown) {
       return false;
     }
+    if(!interactiveObjectComponent.canInteractWith()){
+      return false;
+    }
+    interactiveObjectComponent.interact();
 
     // we can carry this item
     if (interactiveObjectComponent.objectType === INTERACTIVE_OBJECT_TYPE.PICKUP) {
@@ -112,7 +57,7 @@ export class MoveState extends BaseCharacterState {
 
     // we can open this item
     if (interactiveObjectComponent.objectType === INTERACTIVE_OBJECT_TYPE.OPEN) {
-      this._stateMachine.setState(CHARACTER_STATES.OPEN_CHEST_STATE);
+      this._stateMachine.setState(CHARACTER_STATES.OPEN_CHEST_STATE, collisionObject);
       return true;
     }
 

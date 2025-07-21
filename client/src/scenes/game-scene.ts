@@ -11,6 +11,7 @@ import { PLAYER_START_MAX_HEALTH } from '../common/config';
 import { Pot } from '../game-objects/objects/pot';
 import { Chest } from '../game-objects/objects/chest';
 import { GameObject } from '../common/types';
+import { CUSTOM_EVENTS, EVENT_BUS } from '../common/event-bus';
 
 export class GameScene extends Phaser.Scene {
   #controls!: KeyboardComponent;
@@ -81,6 +82,7 @@ export class GameScene extends Phaser.Scene {
     
 
     this.#registerColliders();
+    this.#registerCustomEvents();
   }
 
   #registerColliders(): void {
@@ -106,5 +108,17 @@ export class GameScene extends Phaser.Scene {
     this.physics.add.collider(this.#player, this.#blockingGroup, (enemy, gameObject)=>{
       //
     });
+  }
+
+  #registerCustomEvents(): void{
+    EVENT_BUS.on(CUSTOM_EVENTS.OPENED_CHEST, this.#handleOpenChest, this);
+    this.events.once(Phaser.Scenes.Events.SHUTDOWN, ()=>{
+      EVENT_BUS.off(CUSTOM_EVENTS.OPENED_CHEST, this.#handleOpenChest, this);
+    });
+  }
+
+  #handleOpenChest(chest: Chest): void{
+    console.log('Chest opened');
+    //TODO: 
   }
 }

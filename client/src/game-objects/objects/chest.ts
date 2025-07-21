@@ -34,7 +34,18 @@ export class Chest extends Phaser.Physics.Arcade.Image {
         }
         
         //add components
-        new InteractiveObjectsComponent(this, INTERACTIVE_OBJECT_TYPE.OPEN);
+        new InteractiveObjectsComponent(this, INTERACTIVE_OBJECT_TYPE.OPEN, ()=>{
+            if(!this.#isKeyChest){
+                return true;
+            }
+
+            //TODO: make sure we have the object
+            return false;
+        },
+        ()=>{
+            this.open();
+        },
+    );
     }
 
     public open(): void {
@@ -45,5 +56,6 @@ export class Chest extends Phaser.Physics.Arcade.Image {
         this.#state = CHEST_STATE.OPEN;
         const frameKey = this.#isKeyChest ? CHEST_FRAME_KEYS.BIG_CHEST_OPEN : CHEST_FRAME_KEYS.SMALL_CHEST_OPEN;
         this.setFrame(frameKey);
+        InteractiveObjectsComponent.removeComponent(this);
     }
 }
