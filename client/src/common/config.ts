@@ -1,4 +1,4 @@
-export const ENABLE_LOGGING = true;
+export const ENABLE_LOGGING = false;
 
 export const PLAYER_SPEED = 80;
 export const PLAYER_INVULNERABLE_AFTER_HIT_DURATION = 1000;
@@ -20,3 +20,10 @@ export const ENEMY_WISP_PULSE_DURATION = 500;
 export const ENEMY_WISP_START_MAX_HEALTH = 1;
 
 export const HURT_PUSH_BACK_DELAY = 200;
+
+export const THROW_ITEM_SPEED = 300;
+export const THROW_ITEM_DELAY_BEFORE_CALLBACK = 200;
+
+export const LIFT_ITEM_ANIMATION_ENABLE_DEBUGGING = true;
+export const LIFT_ITEM_ANIMATION_DELAY = 0;
+export const LIFT_ITEM_ANIMATION_DURATION = 250;

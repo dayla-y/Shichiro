@@ -23,8 +23,7 @@ export class IdleHoldingState extends BaseCharacterState {
     const controls = this._gameObject.controls;
 
     if(controls.isActionKeyJustDown){
-        //TODO: Throw item
-        this._stateMachine.setState(CHARACTER_STATES.IDLE_STATE);
+        this._stateMachine.setState(CHARACTER_STATES.THROW_STATE);
     }
 
     // if no other input is provided, do nothing

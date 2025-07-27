@@ -21,3 +21,4 @@ export class CollidingObjectsComponent extends BaseGameObjetctComponet {
     this.#objects = [];
   }
 }
+
