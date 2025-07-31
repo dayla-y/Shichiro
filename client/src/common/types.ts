@@ -1,6 +1,6 @@
 import * as Phaser from 'phaser';
 import { CHARACTER_ANIMATIONS } from './assets';
-import { CHEST_STATE, DIRECTION, INTERACTIVE_OBJECT_TYPE } from './common';
+import { CHEST_STATE, DIRECTION, INTERACTIVE_OBJECT_TYPE, LEVEL_NAME } from './common';
 
 export type CharacterAnimation = keyof typeof CHARACTER_ANIMATIONS;
 
@@ -24,4 +24,12 @@ export interface CustomGameObject {
 
 export function isCustomGameObject(gameObject: GameObject): gameObject is GameObject & CustomGameObject{
     return gameObject['disableObject'] !== undefined && gameObject['enableObject'] !== undefined;
+}
+
+export type LevelName = keyof typeof LEVEL_NAME;
+
+export type LevelData = {
+    level: LevelName;
+    doorId: number;
+    roomId: number;
 }
