@@ -13,6 +13,7 @@ import { Chest } from '../game-objects/objects/chest';
 import { GameObject, LevelData } from '../common/types';
 import { CUSTOM_EVENTS, EVENT_BUS } from '../common/event-bus';
 import { isArcadePhysicsBody } from '../common/utils';
+import { TiledRoomObject } from '../common/tiled/types';
 
 export class GameScene extends Phaser.Scene {
   #levelData!: LevelData;
@@ -21,6 +22,18 @@ export class GameScene extends Phaser.Scene {
   #enemyGroup!: Phaser.GameObjects.Group;
   #blockingGroup!: Phaser.GameObjects.Group;
   #potGameObjects!: Pot[];
+  #objectsByRoomId!: {
+    [key: number]: {
+      chestMap: {[key: number]: Chest},
+      doorMap: {[key: number]: unknown},
+      doors: unknown[],
+      switches: unknown[],
+      pots: Pot[],
+      chests: Chest[],
+      enemyGroup?: Phaser.GameObjects.Group,
+      room: TiledRoomObject;
+    };
+  };
 
   constructor() {
     super({
@@ -126,9 +139,15 @@ export class GameScene extends Phaser.Scene {
   }
 
   #createLevel(): void{
+    //Create main background
     this.add.image(0, 0, ASSET_KEYS[`${this.#levelData.level}_BACKGROUND`], 0).setOrigin(0);
+    //Creata main foreground
     this.add.image(0, 0, ASSET_KEYS[`${this.#levelData.level}_FOREGROUND`], 0).setOrigin(0).setDepth(3);
 
+    const map = this.make.tilemap({
+      key: `${this.#levelData.level}_LEVEL`,
+    });
+    console.log(map);
   }
 
   #setUpCamera(): void{
