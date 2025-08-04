@@ -16,6 +16,7 @@ import { isArcadePhysicsBody } from '../common/utils';
 import { TiledRoomObject } from '../common/tiled/types';
 import { TILED_LAYER_NAMES, TILED_TILESET_NAMES } from '../common/tiled/common';
 import { getAllLayerNamesWithPrefix, getTiledChestObjectsFromMap, getTiledDoorObjectsFromMap, getTiledEnemyObjectsFromMap, getTiledPotObjectsFromMap, getTiledRoomObjectsFromMap, getTiledSwitchObjectsFromMap } from '../common/tiled/tiled-utils';
+import { Door } from '../game-objects/objects/doors';
 
 export class GameScene extends Phaser.Scene {
   #levelData!: LevelData;
@@ -28,7 +29,7 @@ export class GameScene extends Phaser.Scene {
     [key: number]: {
       chestMap: { [key: number]: Chest };
       doorMap: { [key: number]: unknown };
-      doors: unknown[];
+      doors: Door[];
       switches: unknown[];
       pots: Pot[];
       chests: Chest[];
@@ -38,6 +39,8 @@ export class GameScene extends Phaser.Scene {
   };
   #collisionLayer!: Phaser.Tilemaps.TilemapLayer;
   #enemyCollisionLayer!: Phaser.Tilemaps.TilemapLayer;
+  #doorTransitionGroup!: Phaser.GameObjects.Group;
+  #currentRoomId!: number;
 
   constructor() {
     super({
@@ -47,6 +50,7 @@ export class GameScene extends Phaser.Scene {
 
   public init(data: LevelData): void {
     this.#levelData = data;
+    this.#currentRoomId = data.roomId;
   }
 
   public create(): void {
@@ -85,11 +89,17 @@ export class GameScene extends Phaser.Scene {
       enemyGameObject.hit(this.#player.direction, 1);
     });
 
+
     // register collisions between player and blocking game objects (doors, pots, chests, etc.)
     this.physics.add.collider(this.#player, this.#blockingGroup, (player, gameObject) => {
       // add game object to players collision list
       this.#player.collidedWithGameObject(gameObject as GameObject);
     });
+
+        this.physics.overlap(this.#player, this.#doorTransitionGroup, (playerObj, doorObj) =>{
+          this.#handleRoomTransition(doorObj as Phaser.Types.Physics.Arcade.GameObjectWithBody)
+        })
+
 
     // register collisions between enemies and blocking game objects (doors, pots, chests, etc.)
     this.physics.add.collider(
@@ -189,6 +199,7 @@ export class GameScene extends Phaser.Scene {
 
     // initialize objects
     this.#objectsByRoomId = {};
+    this.#doorTransitionGroup = this.add.group([]);
 
     // create game objects
     this.#createRooms(map, TILED_LAYER_NAMES.ROOMS);
@@ -213,6 +224,8 @@ export class GameScene extends Phaser.Scene {
   }
 
   #setupCamera(): void {
+    const roomSize = this.#objectsByRoomId[this.#levelData.roomId].room;
+    this.cameras.main.setBounds(roomSize.x, roomSize.y - roomSize.height, roomSize.width, roomSize.height);
     this.cameras.main.startFollow(this.#player);
   }
 
@@ -294,7 +307,12 @@ export class GameScene extends Phaser.Scene {
   #createDoors(map: Phaser.Tilemaps.Tilemap, layerName: string, roomId: number): void {
     console.log(layerName, roomId);
     const validTiledObjects = getTiledDoorObjectsFromMap(map, layerName);
-    console.log(validTiledObjects);
+    validTiledObjects.forEach((tileObject)=>{
+      const door = new Door(this,tileObject, roomId);
+      this.#objectsByRoomId[roomId].doors.push(door);
+      this.#objectsByRoomId[roomId].doorMap[tileObject.id] = door;
+      this.#doorTransitionGroup.add(door.doorTransitionZone);
+    })
   }
 
   /**
@@ -332,5 +350,9 @@ export class GameScene extends Phaser.Scene {
     console.log(layerName, roomId);
     const validTiledObjects = getTiledEnemyObjectsFromMap(map, layerName);
     console.log(validTiledObjects);
+  }
+
+  #handleRoomTransition(doorTrigger: Phaser.Types.Physics.Arcade.GameObjectWithBody): void{
+    console.log(doorTrigger.name);
   }
 }
