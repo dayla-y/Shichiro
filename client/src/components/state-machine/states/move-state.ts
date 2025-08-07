@@ -16,7 +16,8 @@ export class MoveState extends BaseMoveState {
     const controls = this._gameObject.controls;
 
     if(this.isNoInputMovement(controls)){
-            this._stateMachine.setState(CHARACTER_STATES.IDLE_STATE);
+      this._stateMachine.setState(CHARACTER_STATES.IDLE_STATE);
+      return;
 
     }
     if(this.#checkIfObjectWasInteractedWith(controls)){

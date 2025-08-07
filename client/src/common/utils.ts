@@ -1,5 +1,5 @@
 import * as Phaser from 'phaser';
-import { Direction } from './types';
+import { Direction, Position } from './types';
 import { DIRECTION } from './common';
 /**
  * Utility function to ensure we handle the full possible range of types when checking a variable for a possible
@@ -23,4 +23,19 @@ export function isArcadePhysicsBody(
 
 export function isDirection(direction: string): direction is Direction{
   return DIRECTION[direction] !== undefined;
+}
+
+export function getDirectionOfObjectFromAnotherObject(object: Position, targetObject: Position): Direction{
+  if(object.y < targetObject.y){
+    return DIRECTION.DOWN;
+  }
+
+  if(object.y > targetObject.y){
+    return DIRECTION.UP;
+  }
+
+  if(object.x < targetObject.x){
+    return DIRECTION.RIGHT;
+  }
+  return DIRECTION.LEFT;
 }
