@@ -1,6 +1,6 @@
 import * as Phaser from 'phaser';
-import { Direction, Position } from './types';
-import { DIRECTION } from './common';
+import { Direction, LevelName, Position } from './types';
+import { DIRECTION, LEVEL_NAME } from './common';
 /**
  * Utility function to ensure we handle the full possible range of types when checking a variable for a possible
  * type in a union.
@@ -38,4 +38,8 @@ export function getDirectionOfObjectFromAnotherObject(object: Position, targetOb
     return DIRECTION.RIGHT;
   }
   return DIRECTION.LEFT;
+}
+
+export function isLevelName(levelName: string): levelName is LevelName{
+  return LEVEL_NAME[levelName] !== undefined;
 }
