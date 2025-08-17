@@ -1,61 +1,114 @@
-import * as Phaser from 'phaser'
-import { ChestState, Position } from '../../common/types';
+import * as Phaser from 'phaser';
 import { ASSET_KEYS, CHEST_FRAME_KEYS } from '../../common/assets';
 import { CHEST_STATE, INTERACTIVE_OBJECT_TYPE } from '../../common/common';
+import { ChestState, CustomGameObject } from '../../common/types';
 import { InteractiveObjectsComponent } from '../../components/game-object/interactive-object-component';
+import { ChestReward, TiledChestObject, TrapType } from '../../common/tiled/types';
+import { TRAP_TYPE } from '../../common/tiled/common';
 
-type Chestconfig = {
-    scene: Phaser.Scene;
-    position: Position;
-    requiresKey: boolean;
-    chestState?: ChestState;
-    
-};
+export class Chest extends Phaser.Physics.Arcade.Image implements CustomGameObject {
+  #state: ChestState;
+  #isBossKeyChest: boolean;
+  #id: number;
+  #revealTrigger: TrapType;
+  #contents: ChestReward;
 
-//TODO: Config for new assets
-export class Chest extends Phaser.Physics.Arcade.Image {
-    #state: ChestState;
-    #isKeyChest: boolean;
-    
-    constructor(config: Chestconfig){
-        const {scene, position} = config;
-        const frameKey = config.requiresKey ? CHEST_FRAME_KEYS.BIG_CHEST_CLOSED : CHEST_FRAME_KEYS.SMALL_CHEST_CLOSED;
-        super(scene, position.x, position.y, ASSET_KEYS.DUNGEON_OBJECTS, frameKey);
+  constructor(scene: Phaser.Scene, config: TiledChestObject, chestState = CHEST_STATE.HIDDEN) {
+    const frameKey = config.requiresBossKey ? CHEST_FRAME_KEYS.BIG_CHEST_CLOSED : CHEST_FRAME_KEYS.SMALL_CHEST_CLOSED;
+    super(scene, config.x, config.y, ASSET_KEYS.DUNGEON_OBJECTS, frameKey);
 
-        scene.add.existing(this);
-        scene.physics.add.existing(this);
-        this.setOrigin(0, 1).setImmovable(true);
+    // add object to scene and enable phaser physics
+    scene.add.existing(this);
+    scene.physics.add.existing(this);
+    this.setOrigin(0, 1).setImmovable(true);
 
-        this.#state = config.chestState || CHEST_STATE.HIDDEN;
-        this.#isKeyChest = config.requiresKey;
+    this.#state = chestState;
+    this.#isBossKeyChest = config.requiresBossKey;
+    this.#id = config.id;
+    this.#revealTrigger = config.revealChestTrigger;
+    this.#contents = config.contents;
 
-        if(this.#isKeyChest){
-            (this.body as Phaser.Physics.Arcade.Body).setSize(32, 24).setOffset(0,8);
+    if (this.#isBossKeyChest) {
+      (this.body as Phaser.Physics.Arcade.Body).setSize(32, 24).setOffset(0, 8);
+    }
+
+    // add components
+    new InteractiveObjectsComponent(
+      this,
+      INTERACTIVE_OBJECT_TYPE.OPEN,
+      () => {
+        // if this is a small chest, then the player can open
+        if (!this.#isBossKeyChest) {
+          return true;
         }
-        
-        //add components
-        new InteractiveObjectsComponent(this, INTERACTIVE_OBJECT_TYPE.OPEN, ()=>{
-            if(!this.#isKeyChest){
-                return true;
-            }
-
-            //TODO: make sure we have the object
-            return false;
-        },
-        ()=>{
-            this.open();
-        },
+        // TODO: if boss chest, make sure player has the key to open the chest
+        return false;
+      },
+      () => {
+        this.open();
+      },
     );
+
+    if (this.#revealTrigger === TRAP_TYPE.NONE) {
+      if (this.#state === CHEST_STATE.HIDDEN) {
+        this.#state = CHEST_STATE.REVEALED;
+      }
+      return;
     }
 
-    public open(): void {
-        if(this.#state !== CHEST_STATE.REVELEADED){
-            return;
-        }
+    this.disableObject();
+  }
 
-        this.#state = CHEST_STATE.OPEN;
-        const frameKey = this.#isKeyChest ? CHEST_FRAME_KEYS.BIG_CHEST_OPEN : CHEST_FRAME_KEYS.SMALL_CHEST_OPEN;
-        this.setFrame(frameKey);
-        InteractiveObjectsComponent.removeComponent(this);
+  get revealTrigger(): TrapType {
+    return this.#revealTrigger;
+  }
+
+  get id(): number {
+    return this.#id;
+  }
+
+  get contents(): ChestReward {
+    return this.#contents;
+  }
+
+  public open(): void {
+    if (this.#state !== CHEST_STATE.REVEALED) {
+      return;
     }
+
+    this.#state = CHEST_STATE.OPEN;
+    const frameKey = this.#isBossKeyChest ? CHEST_FRAME_KEYS.BIG_CHEST_OPEN : CHEST_FRAME_KEYS.SMALL_CHEST_OPEN;
+    this.setFrame(frameKey);
+
+    // after we open the chest, we can no longer interact with it
+    InteractiveObjectsComponent.removeComponent(this);
+  }
+
+  public disableObject(): void {
+    // disable body on game object so we stop triggering the collision
+    (this.body as Phaser.Physics.Arcade.Body).enable = false;
+    // make not visible until player re-enters room
+    this.active = false;
+    this.visible = false;
+  }
+
+  public enableObject(): void {
+    if (this.#state === CHEST_STATE.HIDDEN) {
+      return;
+    }
+
+    // enable body on game object so we trigger the collision
+    (this.body as Phaser.Physics.Arcade.Body).enable = true;
+    // make visible to the player
+    this.active = true;
+    this.visible = true;
+  }
+
+  public reveal(): void {
+    if (this.#state !== CHEST_STATE.HIDDEN) {
+      return;
+    }
+    this.#state = CHEST_STATE.REVEALED;
+    this.enableObject();
+  }
 }

@@ -338,18 +338,44 @@ export class GameScene extends Phaser.Scene {
    * Parses the Tiled Map data and creates the 'Chest' game objects.
    */
   #createChests(map: Phaser.Tilemaps.Tilemap, layerName: string, roomId: number): void {
-    console.log(layerName, roomId);
     const validTiledObjects = getTiledChestObjectsFromMap(map, layerName);
-    console.log(validTiledObjects);
+    validTiledObjects.forEach((tiledObject) => {
+      const chest = new Chest(this, tiledObject);
+      this.#objectsByRoomId[roomId].chests.push(chest);
+      this.#objectsByRoomId[roomId].chestMap[chest.id] = chest;
+      this.#blockingGroup.add(chest);
+    });
   }
 
   /**
    * Parses the Tiled Map data and creates the various enemy game objects like 'Wisp' and 'Spider'.
    */
   #createEnemies(map: Phaser.Tilemaps.Tilemap, layerName: string, roomId: number): void {
-    console.log(layerName, roomId);
+    if (this.#objectsByRoomId[roomId].enemyGroup === undefined) {
+      this.#objectsByRoomId[roomId].enemyGroup = this.add.group([], {
+        runChildUpdate: true,
+      });
+    }
     const validTiledObjects = getTiledEnemyObjectsFromMap(map, layerName);
-    console.log(validTiledObjects);
+    for (const tiledObject of validTiledObjects) {
+      if (tiledObject.type !== 1 && tiledObject.type !== 2 && tiledObject.type !== 3) {
+        continue;
+      }
+      if (tiledObject.type === 1) {
+        const spider = new Spider({ scene: this, position: { x: tiledObject.x, y: tiledObject.y } });
+        this.#objectsByRoomId[roomId].enemyGroup.add(spider);
+        continue;
+      }
+      if (tiledObject.type === 2) {
+        const wisp = new Wisp({ scene: this, position: { x: tiledObject.x, y: tiledObject.y } });
+        this.#objectsByRoomId[roomId].enemyGroup.add(wisp);
+        continue;
+      }
+      if (tiledObject.type === 3) {
+        // TODO: create boss enemy
+        continue;
+      }
+    }
   }
 
   #handleRoomTransition(doorTrigger: Phaser.Types.Physics.Arcade.GameObjectWithBody): void {
