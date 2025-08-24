@@ -22,7 +22,7 @@ export class PreloadScene extends Phaser.Scene {
     // TODO: this will ned to come from our data manager
     const sceneData: LevelData = {
       level: LEVEL_NAME.DUNGEON_1,
-      roomId: 4,
+      roomId: 3,
       doorId: 1,
     };
     this.scene.start(SCENE_KEYS.GAME_SCENE, sceneData);
